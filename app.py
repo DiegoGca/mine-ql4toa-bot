@@ -6,8 +6,6 @@ import logging
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 
-from credentials import (TOKEN, LIST_OF_ADMINS, MODE, MSPORT, MSURL)
-
 import statusping
 
 # Enabling logging
@@ -17,13 +15,16 @@ logger = logging.getLogger()
 
 
 try:
-    from credentials import LIST_OF_ADMINS, TOKEN
-except ImportError:
+    from credentials import (TOKEN, LIST_OF_ADMINS, MODE, MSPORT, MSURL)
+except (ImportError, ModuleNotFoundError):
     TOKEN = os.getenv('TOKEN')
     MODE = os.getenv('MODE', 'dev')
+    MSPORT = os.getenv('MSPORT')
+    MSURL = os.getenv('MSURL')
 
 mode = MODE
-logging.info('Starting bot...%s',mode)
+
+logging.info('Starting bot...%s', mode)
 if mode == "dev":
     def run(updater):
         updater.start_polling()
