@@ -19,8 +19,8 @@ try:
 except (ImportError, ModuleNotFoundError):
     TOKEN = os.getenv('TOKEN')
     MODE = os.getenv('MODE', 'dev')
-    MSPORT = os.getenv('MSPORT')
-    MSURL = int(os.getenv('MSURL'))
+    MSPORT = int(os.getenv('MSPORT'))
+    MSURL = os.getenv('MSURL')
 
 mode = MODE
 
