@@ -20,7 +20,7 @@ except (ImportError, ModuleNotFoundError):
     TOKEN = os.getenv('TOKEN')
     MODE = os.getenv('MODE', 'dev')
     MSPORT = os.getenv('MSPORT')
-    MSURL = os.getenv('MSURL')
+    MSURL = int(os.getenv('MSURL'))
 
 mode = MODE
 
@@ -37,6 +37,7 @@ elif mode == "prod":
                               port=PORT,
                               url_path=TOKEN)
         updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
+        logger.info("Heroku updater web hook")
 else:
     print(mode)
     logger.error("No MODE specified!")
