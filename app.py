@@ -5,6 +5,9 @@ import logging
 
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
+from telegram import ChatAction
+
+from functools import wraps
 
 import statusping
 
@@ -13,7 +16,7 @@ logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger()
 
-
+#######
 try:
     from credentials import (TOKEN, LIST_OF_ADMINS, MODE, MSPORT, MSURL)
 except (ImportError, ModuleNotFoundError):
@@ -22,6 +25,7 @@ except (ImportError, ModuleNotFoundError):
     MSPORT = int(os.getenv('MSPORT'))
     MSURL = os.getenv('MSURL')
 
+#######
 mode = MODE
 
 logging.info('Starting bot...%s', mode)
@@ -37,19 +41,33 @@ elif mode == "prod":
                               port=PORT,
                               url_path=TOKEN)
         updater.bot.set_webhook("https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME, TOKEN))
-        logger.info("Heroku updater web hook")
 else:
     print(mode)
     logger.error("No MODE specified!")
     sys.exit(1)
 
+#######
+def send_action(action):
+    """Sends typing action while processing func command."""
 
+    def decorator(func):
+        @wraps(func)
+        def command_func(update, context, *args, **kwargs):
+            context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=action)
+            return func(update, context,  *args, **kwargs)
+
+        return command_func
+    return decorator
+
+
+######
 def start(update, context):
     print("Holaa")
     context.bot.send_message(chat_id=update.message.chat_id,
         text="Hola!")
 
 
+@send_action(ChatAction.TYPING)
 def raw(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
     text = sp.get_status()
