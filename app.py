@@ -122,6 +122,16 @@ def get_serv_info(update, context):
         text=text)
 
 
+@send_action(ChatAction.TYPING)
+def get_serv_status(update, context):
+    sp = statusping.StatusPing(MSURL, MSPORT, 10)
+    raw = sp.get_status()
+    info = serv_info(raw)
+    players = p_online(raw['players'])
+    text = info + "\n" + players
+    context.bot.send_message(chat_id=update.message.chat_id,
+        text=text)
+
 
 if __name__ == '__main__':
     updater = Updater(token=TOKEN, use_context=True)
@@ -134,6 +144,8 @@ if __name__ == '__main__':
     raw_handler = CommandHandler(['players', 'gente', 'jugadores', 'p'], players)
     dp.add_handler(raw_handler)
     raw_handler = CommandHandler('server', get_serv_info)
+    dp.add_handler(raw_handler)
+    raw_handler = CommandHandler('status', get_serv_status)
     dp.add_handler(raw_handler)
 
     run(updater)
