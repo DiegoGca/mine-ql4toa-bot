@@ -60,7 +60,23 @@ def send_action(action):
     return decorator
 
 
-######
+########
+def p_online(players):
+    text = "Jugadores online: "
+    online = players['online']
+    max = players['max']
+    jugadores = ""
+    for p in players['sample']:
+        jugadores += " - " + p['name']
+
+    text += str(online) + "/" + str(max) + "\n"
+    text += jugadores
+
+    return text
+
+
+########
+
 def start(update, context):
     print("Holaa")
     context.bot.send_message(chat_id=update.message.chat_id,
@@ -72,9 +88,18 @@ def raw(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
     text = sp.get_status()
     print(text)
+    p_online(text['players'])
     context.bot.send_message(chat_id=update.message.chat_id,
         text=text)
 
+
+@send_action(ChatAction.TYPING)
+def players(update, context):
+    sp = statusping.StatusPing(MSURL, MSPORT, 10)
+    text = sp.get_status()
+    text = p_online(text['players'])
+    context.bot.send_message(chat_id=update.message.chat_id,
+        text=text)
 
 
 if __name__ == '__main__':
@@ -84,6 +109,8 @@ if __name__ == '__main__':
     start_handler = CommandHandler('start', start)
     dp.add_handler(start_handler)
     raw_handler = CommandHandler('raw', raw)
+    dp.add_handler(raw_handler)
+    raw_handler = CommandHandler(['players', 'gente', 'jugadores', 'p'], players)
     dp.add_handler(raw_handler)
 
     run(updater)
