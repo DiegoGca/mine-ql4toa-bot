@@ -75,6 +75,18 @@ def p_online(players):
     return text
 
 
+def serv_info(serv):
+    text = "QL4TOA MINECRAFT SERVER\n" +\
+    "——————————————\n" + \
+    "Server Status: " + \
+    "ONLINE\n"
+
+    text += "url: "+ MSURL + ":" + str(MSPORT) + "\n"
+    text += "version: " + serv['version']['name'] + "\n"
+    text += "ping: " + str(serv['ping'])
+
+    return text
+
 ########
 
 def start(update, context):
@@ -87,8 +99,6 @@ def start(update, context):
 def raw(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
     text = sp.get_status()
-    print(text)
-    p_online(text['players'])
     context.bot.send_message(chat_id=update.message.chat_id,
         text=text)
 
@@ -102,6 +112,17 @@ def players(update, context):
         text=text)
 
 
+@send_action(ChatAction.TYPING)
+def get_serv_info(update, context):
+    sp = statusping.StatusPing(MSURL, MSPORT, 10)
+    raw = sp.get_status()
+
+    text = serv_info(raw)
+    context.bot.send_message(chat_id=update.message.chat_id,
+        text=text)
+
+
+
 if __name__ == '__main__':
     updater = Updater(token=TOKEN, use_context=True)
     dp = updater.dispatcher
@@ -111,6 +132,8 @@ if __name__ == '__main__':
     raw_handler = CommandHandler('raw', raw)
     dp.add_handler(raw_handler)
     raw_handler = CommandHandler(['players', 'gente', 'jugadores', 'p'], players)
+    dp.add_handler(raw_handler)
+    raw_handler = CommandHandler('server', get_serv_info)
     dp.add_handler(raw_handler)
 
     run(updater)
