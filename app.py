@@ -66,8 +66,9 @@ def p_online(players):
     online = players['online']
     max = players['max']
     jugadores = ""
-    for p in players['sample']:
-        jugadores += " - " + p['name'] + "\n"
+    if online != 0:
+        for p in players['sample']:
+            jugadores += " - " + p['name'] + "\n"
 
     text += str(online) + "/" + str(max) + "\n"
     text += jugadores
@@ -79,7 +80,7 @@ def serv_info(serv):
     text = "QL4TOA MINECRAFT SERVER\n" +\
     "——————————————\n" + \
     "Server Status: " + \
-    "ONLINE\n"
+    "ONLINE ✅\n"
 
     text += "url: "+ MSURL + ":" + str(MSPORT) + "\n"
     text += "version: " + serv['version']['name'] + "\n"
