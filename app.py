@@ -67,7 +67,7 @@ def p_online(players):
     max = players['max']
     jugadores = ""
     for p in players['sample']:
-        jugadores += " - " + p['name']
+        jugadores += " - " + p['name'] + "\n"
 
     text += str(online) + "/" + str(max) + "\n"
     text += jugadores
@@ -98,7 +98,11 @@ def start(update, context):
 @send_action(ChatAction.TYPING)
 def raw(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
-    text = sp.get_status()
+    try:
+        text = sp.get_status()
+    except Exception as e:
+        text = "No se ha podido conectar con " + MSURL + ":" + str(MSPORT)
+        text += "\n" + str(e)
     context.bot.send_message(chat_id=update.message.chat_id,
         text=text)
 
@@ -106,18 +110,23 @@ def raw(update, context):
 @send_action(ChatAction.TYPING)
 def players(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
-    text = sp.get_status()
-    text = p_online(text['players'])
+    try:
+        text = sp.get_status()
+        text = p_online(text['players'])
+    except:
+        text="No se pudo obtener respuesta del servidor"
     context.bot.send_message(chat_id=update.message.chat_id,
-        text=text)
+    text=text)
 
 
 @send_action(ChatAction.TYPING)
 def get_serv_info(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
-    raw = sp.get_status()
-
-    text = serv_info(raw)
+    try:
+        raw = sp.get_status()
+        text = serv_info(raw)
+    except:
+        text="No se pudo obtener respuesta del servidor"
     context.bot.send_message(chat_id=update.message.chat_id,
         text=text)
 
@@ -125,10 +134,13 @@ def get_serv_info(update, context):
 @send_action(ChatAction.TYPING)
 def get_serv_status(update, context):
     sp = statusping.StatusPing(MSURL, MSPORT, 10)
-    raw = sp.get_status()
-    info = serv_info(raw)
-    players = p_online(raw['players'])
-    text = info + "\n" + players
+    try:
+        raw = sp.get_status()
+        info = serv_info(raw)
+        players = p_online(raw['players'])
+        text = info + "\n" + players
+    except:
+        text="No se pudo obtener respuesta del servidor"
     context.bot.send_message(chat_id=update.message.chat_id,
         text=text)
 
