@@ -11,6 +11,29 @@ from functools import wraps
 
 import statusping
 
+from flask import Flask
+from flask import request
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return '<h1>hello world<h1>'
+
+@app.route('/test/', strict_slashes=False)
+def test():
+    return '<h1>test<h1>'
+
+
+@app.route('/postjson', methods = ['POST'])
+def postJsonHandler():
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    return 'JSON posted'
+
+
+
 # Enabling logging
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -162,3 +185,4 @@ if __name__ == '__main__':
     dp.add_handler(raw_handler)
 
     run(updater)
+    app.run(host='0.0.0.0')
