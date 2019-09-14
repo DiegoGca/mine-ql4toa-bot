@@ -1,1 +1,15 @@
+asn1crypto==0.24.0
+cffi==1.12.3
+Click==7.0
+cryptography==2.6.1
+dnspython==1.15.0
+dnspython3==1.15.0
+Flask==1.1.1
+itsdangerous==1.1.0
+Jinja2==2.10.1
+MarkupSafe==1.1.1
+mcstatus==2.2.1
+pycparser==2.19
 python-telegram-bot==12.0.0b1
+tornado==6.0.2
+Werkzeug==0.15.6
