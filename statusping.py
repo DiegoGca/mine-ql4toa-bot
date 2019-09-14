@@ -11,7 +11,7 @@ import time
 class StatusPing:
     """ Get the ping status for the Minecraft server """
 
-    def __init__(self, host='http://0.tcp.eu.ngrok.io', port=12608, timeout=5):
+    def __init__(self, host='localhost', port=25565, timeout=5):
         """ Init the hostname and the port """
         self._host = host
         self._port = port
