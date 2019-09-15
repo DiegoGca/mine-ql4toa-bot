@@ -1,2 +1,2 @@
 web: python3 app.py
-# web: gunicorn flsk:app
+web: gunicorn flsk:app
