@@ -35,6 +35,8 @@ def run(updater):
         PORT = int(os.environ.get("PORT", "8443"))
         HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
         # Code from https://github.com/python-telegram-bot/python-telegram-bot/wiki/Webhooks#heroku
+        logger.debug(f'Port: {PORT}')
+        logger.debug(f'HEROKU_APP_NAME: {HEROKU_APP_NAME}')
         updater.start_webhook(listen="0.0.0.0",
                               port=PORT,
                               url_path=TOKEN)
@@ -104,7 +106,7 @@ def serv_info(serv):
 def start(update, context):
     print("Holaa")
     context.bot.send_message(chat_id=update.message.chat_id,
-                             text="Hola!")
+                             text="¡Hola!")
 
 
 @send_action(ChatAction.TYPING)
