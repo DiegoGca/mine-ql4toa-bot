@@ -39,8 +39,9 @@ def run(updater):
         logger.debug(f'HEROKU_APP_NAME: {HEROKU_APP_NAME}')
         updater.start_webhook(listen="0.0.0.0",
                               port=PORT,
-                              url_path=TOKEN)
-        updater.bot.set_webhook(f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
+                              url_path=TOKEN,
+                              webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
+        # updater.bot.set_webhook(f"https://{HEROKU_APP_NAME}.herokuapp.com/{TOKEN}")
     else:
         logger.error("No MODE specified!")
         sys.exit(1)
